@@ -1,0 +1,6 @@
+Beams:idA = 2212
+Beams:idB = 2212
+Beams:frameType = 1
+Beams:eCM = 14000
+Tune:pp = -1
+Top:gg2ttbar = on
