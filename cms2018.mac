@@ -1,0 +1,3 @@
+/persistency/gdml/read cms2018.gdml
+/run/initialize
+/run/beamOn 10
