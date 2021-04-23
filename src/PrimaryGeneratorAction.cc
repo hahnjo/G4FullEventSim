@@ -2,4 +2,6 @@
 
 #include "PrimaryGeneratorAction.hh"
 
-void PrimaryGeneratorAction::GeneratePrimaries(G4Event *) {}
+void PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
+  fParticleSource.GeneratePrimaryVertex(anEvent);
+}

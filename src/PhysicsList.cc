@@ -2,6 +2,4 @@
 
 #include "PhysicsList.hh"
 
-void PhysicsList::ConstructParticle() {}
-
-void PhysicsList::ConstructProcess() {}
+void PhysicsList::ConstructProcess() { Base::ConstructProcess(); }

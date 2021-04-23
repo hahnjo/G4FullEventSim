@@ -3,11 +3,14 @@
 #ifndef PHYSICS_LIST_HH
 #define PHYSICS_LIST_HH
 
-#include <G4VUserPhysicsList.hh>
+#include <FTFP_BERT.hh>
 
-class PhysicsList final : public G4VUserPhysicsList {
+class PhysicsList final : public FTFP_BERT {
+  using Base = FTFP_BERT;
+
 public:
-  void ConstructParticle() override;
+  PhysicsList() : Base(/*verbose=*/0) {}
+
   void ConstructProcess() override;
 };
 
