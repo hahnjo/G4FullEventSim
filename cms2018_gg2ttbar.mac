@@ -1,0 +1,8 @@
+/process/em/verbose 0
+/process/had/verbose 0
+# /tracking/verbose 1
+
+/persistency/gdml/read cms2018.gdml
+/run/initialize
+/generator/hepMCfile gg2ttbar.dat
+/run/beamOn 1

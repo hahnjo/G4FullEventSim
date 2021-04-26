@@ -1,0 +1,8 @@
+// SPDX-License-Identifier: Apache-2.0
+
+#ifndef CONFIG_HH
+#define CONFIG_HH
+
+#cmakedefine01 HAVE_HEPMC3
+
+#endif // CONFIG_HH
