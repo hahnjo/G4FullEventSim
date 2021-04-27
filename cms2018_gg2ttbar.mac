@@ -5,4 +5,28 @@
 /persistency/gdml/read cms2018.gdml
 /run/initialize
 /generator/hepMCfile gg2ttbar.dat
+
+# Model settings from FTFPCMS_BERT_EMM
+#  - CMSEmStandardPhysics(LPM)
+/process/em/applyCuts true
+/process/eLoss/StepFunction 0.8 1 mm
+/process/msc/RangeFactor 0.2
+/process/msc/StepLimit Minimal
+# Possibly a different step limit for "HcalRegion" and "HGCalRegion" in
+# CMSEmStandardPhysics, to be checked.
+
+#  - CMSHadronPhysicsFTFP_BERT(106)
+# missing: maxBERT_pion should be 12 GeV
+
+#  - configuration of G4NeutronTrackingCut
+/physics_engine/neutron/timeLimit 1000 ns
+
+# SimG4Core/Application/src/StackingAction.cc kills secondary neutrons below a
+# configurable NeutronThreshold with the default of 30 MeV. Approximate this by
+# setting the same energy limit for G4NeutronKiller, even if that also kills
+# particles with an initially bigger energy after some interactions. On the
+# other hand, the StackingAction kills the particles before they are tracked,
+# which is even more efficient.
+/physics_engine/neutron/energyLimit 30 MeV
+
 /run/beamOn 1
