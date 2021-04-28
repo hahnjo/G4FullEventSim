@@ -9,6 +9,7 @@ add_executable(g4FullEventSim
   ActionInitialization.cc
   Actions.cc
   DetectorConstruction.cc
+  EMshowerProcess.cc
   PhysicsList.cc
   PrimaryGeneratorAction.cc
 )
