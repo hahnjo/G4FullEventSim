@@ -2,7 +2,8 @@
 /process/had/verbose 0
 # /tracking/verbose 1
 
-/persistency/gdml/read cms2018.gdml
+/detector/gdml cms2018.gdml
+/detector/field 0 0 3.8 T
 /run/initialize
 /generator/hepMCfile gg2ttbar.dat
 
