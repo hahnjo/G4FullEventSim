@@ -66,7 +66,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   }
 
   G4GDMLParser parser;
-  parser.Read(fGDMLfile, true);
+  parser.Read(fGDMLfile, /*Validate=*/false);
   return parser.GetWorldVolume();
 }
 
