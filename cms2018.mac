@@ -18,8 +18,7 @@
 #  - CMSHadronPhysicsFTFP_BERT(106)
 # missing: maxBERT_pion should be 12 GeV
 
-#  - configuration of G4NeutronTrackingCut
-/physics_engine/neutron/timeLimit 1000 ns
+/maxTrackTime 500 ns
 
 # SimG4Core/Application/src/StackingAction.cc kills secondary neutrons below a
 # configurable NeutronThreshold with the default of 30 MeV. Approximate this by

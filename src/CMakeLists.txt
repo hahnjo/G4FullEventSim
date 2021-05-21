@@ -11,7 +11,9 @@ add_executable(g4FullEventSim
   DetectorConstruction.cc
   EMshowerProcess.cc
   PhysicsList.cc
+  PhysicsSettings.cc
   PrimaryGeneratorAction.cc
+  SteppingAction.cc
 )
 target_compile_options(g4FullEventSim PRIVATE -Wall -Wextra -Wsuggest-override)
 target_link_libraries(g4FullEventSim ${Geant4_LIBRARIES})

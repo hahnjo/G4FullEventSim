@@ -3,6 +3,7 @@
 #include "ActionInitialization.hh"
 #include "DetectorConstruction.hh"
 #include "PhysicsList.hh"
+#include "PhysicsSettings.hh"
 
 #include <G4RunManager.hh>
 #include <G4RunManagerFactory.hh>
@@ -19,9 +20,13 @@ int main(int argc, char *argv[]) {
   std::unique_ptr<G4RunManager> runManager(
       G4RunManagerFactory::CreateRunManager());
 
+  std::unique_ptr<PhysicsSettingsMessenger> psMessenger(
+      new PhysicsSettingsMessenger);
+  const PhysicsSettings &physicsSettings = psMessenger->GetPhysicsSettings();
+
   runManager->SetUserInitialization(new DetectorConstruction);
   runManager->SetUserInitialization(new PhysicsList);
-  runManager->SetUserInitialization(new ActionInitialization);
+  runManager->SetUserInitialization(new ActionInitialization(physicsSettings));
 
   G4UImanager *UImanager = G4UImanager::GetUIpointer();
   G4String command = "/control/execute ";

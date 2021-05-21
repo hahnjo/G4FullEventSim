@@ -4,8 +4,13 @@
 
 #include "Actions.hh"
 #include "PrimaryGeneratorAction.hh"
+#include "SteppingAction.hh"
 
 #include <G4RunManager.hh>
+
+ActionInitialization::ActionInitialization(
+    const PhysicsSettings &physicsSettings)
+    : fPhysicsSettings(physicsSettings) {}
 
 void ActionInitialization::BuildForMaster() const {
   SetUserAction(new MasterRunAction);
@@ -23,4 +28,5 @@ void ActionInitialization::Build() const {
   EventAction *eventAction = new EventAction;
   SetUserAction(eventAction);
   SetUserAction(new TrackingAction(eventAction));
+  SetUserAction(new SteppingAction(fPhysicsSettings));
 }
