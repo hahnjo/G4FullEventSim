@@ -20,13 +20,9 @@
 
 /maxTrackTime 500 ns
 
-# SimG4Core/Application/src/StackingAction.cc kills secondary neutrons below a
-# configurable NeutronThreshold with the default of 30 MeV. Approximate this by
-# setting the same energy limit for G4NeutronKiller, even if that also kills
-# particles with an initially bigger energy after some interactions. On the
-# other hand, the StackingAction kills the particles before they are tracked,
-# which is even more efficient.
-/physics_engine/neutron/energyLimit 30 MeV
+# Configuration of russian roulette performed in StackingAction
+/russianRoulette/gamma 0.3 5 MeV
+/russianRoulette/neutron 0.1 10 MeV
 
 /gps/particle e-
 /gps/energy 1 GeV

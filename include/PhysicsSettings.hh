@@ -5,11 +5,21 @@
 
 #include <G4UImessenger.hh>
 
-struct PhysicsSettings final {
-  double maxTrackTime = -1;
+struct RouletteParameters final {
+  double prob = 1.0;
+  double limit = 0.0;
 };
 
+struct PhysicsSettings final {
+  double maxTrackTime = -1;
+
+  RouletteParameters rrGamma;
+  RouletteParameters rrNeutron;
+};
+
+class G4UIcommand;
 class G4UIcmdWithADoubleAndUnit;
+class G4UIdirectory;
 
 class PhysicsSettingsMessenger final : public G4UImessenger {
 public:
@@ -24,6 +34,9 @@ private:
   PhysicsSettings fSettings;
 
   std::unique_ptr<G4UIcmdWithADoubleAndUnit> fMaxTrackTime;
+  std::unique_ptr<G4UIdirectory> fRussianRoulette;
+  std::unique_ptr<G4UIcommand> fRRgamma;
+  std::unique_ptr<G4UIcommand> fRRneutron;
 };
 
 #endif // PHYSICS_SETTINGS_HH

@@ -13,6 +13,7 @@ add_executable(g4FullEventSim
   PhysicsList.cc
   PhysicsSettings.cc
   PrimaryGeneratorAction.cc
+  StackingAction.cc
   SteppingAction.cc
 )
 target_compile_options(g4FullEventSim PRIVATE -Wall -Wextra -Wsuggest-override)

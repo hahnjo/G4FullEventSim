@@ -74,3 +74,8 @@ void EventAction::AccountTrack(const G4Track *track) {
     fStatistics.numOthers++;
   }
 }
+
+void TrackingAction::PreUserTrackingAction(const G4Track *track) {
+  fTrack = track;
+  fEventAction->AccountTrack(track);
+}

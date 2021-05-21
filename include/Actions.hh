@@ -82,12 +82,14 @@ class TrackingAction final : public G4UserTrackingAction {
 public:
   TrackingAction(EventAction *eventAction) : fEventAction(eventAction) {}
 
-  void PreUserTrackingAction(const G4Track *track) override {
-    fEventAction->AccountTrack(track);
-  }
+  void PreUserTrackingAction(const G4Track *track) override;
+
+  const G4Track *GetTrack() const { return fTrack; }
 
 private:
   EventAction *fEventAction;
+
+  const G4Track *fTrack;
 };
 
 #endif // ACTIONS_HH

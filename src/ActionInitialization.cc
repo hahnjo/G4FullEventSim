@@ -4,6 +4,7 @@
 
 #include "Actions.hh"
 #include "PrimaryGeneratorAction.hh"
+#include "StackingAction.hh"
 #include "SteppingAction.hh"
 
 #include <G4RunManager.hh>
@@ -27,6 +28,9 @@ void ActionInitialization::Build() const {
 
   EventAction *eventAction = new EventAction;
   SetUserAction(eventAction);
-  SetUserAction(new TrackingAction(eventAction));
+  TrackingAction *trackingAction = new TrackingAction(eventAction);
+  SetUserAction(trackingAction);
   SetUserAction(new SteppingAction(fPhysicsSettings));
+
+  SetUserAction(new StackingAction(fPhysicsSettings, *trackingAction));
 }
