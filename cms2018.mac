@@ -4,7 +4,6 @@
 
 /detector/gdml cms2018.gdml
 /detector/field 0 0 3.8 T
-/run/initialize
 
 # Model settings from FTFPCMS_BERT_EMM
 #  - CMSEmStandardPhysics(LPM)
@@ -24,6 +23,7 @@
 /russianRoulette/gamma 0.3 5 MeV
 /russianRoulette/neutron 0.1 10 MeV
 
+/run/initialize
 /gps/particle e-
 /gps/energy 1 GeV
 /gps/ang/type iso

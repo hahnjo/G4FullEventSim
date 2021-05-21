@@ -4,8 +4,6 @@
 
 /detector/gdml cms2018.gdml
 /detector/field 0 0 3.8 T
-/run/initialize
-/generator/hepMCfile gg2ttbar.dat
 
 # Model settings from FTFPCMS_BERT_EMM
 #  - CMSEmStandardPhysics(LPM)
@@ -25,4 +23,6 @@
 /russianRoulette/gamma 0.3 5 MeV
 /russianRoulette/neutron 0.1 10 MeV
 
+/run/initialize
+/generator/hepMCfile gg2ttbar.dat
 /run/beamOn 1
