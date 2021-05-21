@@ -16,14 +16,15 @@ ActionInitialization::ActionInitialization(
     : fPhysicsSettings(physicsSettings) {}
 
 void ActionInitialization::BuildForMaster() const {
-  SetUserAction(new MasterRunAction);
+  SetUserAction(new MasterRunAction(fPhysicsSettings));
 }
 
 void ActionInitialization::Build() const {
   SetUserAction(new PrimaryGeneratorAction);
 
-  if (G4RunManager::GetRunManager()->GetRunManagerType() == G4RunManager::sequentialRM) {
-    SetUserAction(new MasterRunAction);
+  if (G4RunManager::GetRunManager()->GetRunManagerType() ==
+      G4RunManager::sequentialRM) {
+    SetUserAction(new MasterRunAction(fPhysicsSettings));
   } else {
     SetUserAction(new RunAction);
   }
