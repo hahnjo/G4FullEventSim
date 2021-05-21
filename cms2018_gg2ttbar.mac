@@ -15,7 +15,10 @@
 # CMSEmStandardPhysics, to be checked.
 
 #  - CMSHadronPhysicsFTFP_BERT(106)
-# missing: maxBERT_pion should be 12 GeV
+/FTFP_BERT/pion 3 12 GeV
+/FTFP_BERT/kaon 3 6 GeV
+/FTFP_BERT/proton 3 6 GeV
+/FTFP_BERT/neutron 3 6 GeV
 
 /maxTrackTime 500 ns
 

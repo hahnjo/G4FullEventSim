@@ -7,6 +7,7 @@
 #include <G4UIdirectory.hh>
 #include <G4UIparameter.hh>
 
+#include <sstream>
 #include <string>
 
 PhysicsSettingsMessenger::PhysicsSettingsMessenger() {
@@ -37,6 +38,36 @@ PhysicsSettingsMessenger::PhysicsSettingsMessenger() {
     unit->SetDefaultValue("MeV");
     cmd->SetParameter(unit);
   }
+
+  fFTFP_BERT.reset(new G4UIdirectory("/FTFP_BERT/"));
+  fFTFP_BERT->SetGuidance("Set threshold between BERT and FTFP.");
+
+  fFTFP_BERTpion.reset(new G4UIcommand("/FTFP_BERT/pion", this));
+  fFTFP_BERTpion->SetGuidance("Set threshold for pions.");
+
+  fFTFP_BERTkaon.reset(new G4UIcommand("/FTFP_BERT/kaon", this));
+  fFTFP_BERTkaon->SetGuidance("Set threshold for kaons.");
+
+  fFTFP_BERTproton.reset(new G4UIcommand("/FTFP_BERT/proton", this));
+  fFTFP_BERTproton->SetGuidance("Set threshold for protons.");
+
+  fFTFP_BERTneutron.reset(new G4UIcommand("/FTFP_BERT/neutron", this));
+  fFTFP_BERTneutron->SetGuidance("Set threshold for neutrons.");
+
+  for (auto cmd : {fFTFP_BERTpion.get(), fFTFP_BERTkaon.get(),
+                   fFTFP_BERTproton.get(), fFTFP_BERTneutron.get()}) {
+    G4UIparameter *minFTFP = new G4UIparameter("minFTFP", 'd', false);
+    minFTFP->SetParameterRange("minFTFP>0.");
+    cmd->SetParameter(minFTFP);
+
+    G4UIparameter *maxBERT = new G4UIparameter("maxBERT", 'd', false);
+    maxBERT->SetParameterRange("maxBERT>0.");
+    cmd->SetParameter(maxBERT);
+
+    G4UIparameter *unit = new G4UIparameter("unit", 's', true);
+    unit->SetDefaultValue("GeV");
+    cmd->SetParameter(unit);
+  }
 }
 
 PhysicsSettingsMessenger::~PhysicsSettingsMessenger() {}
@@ -53,13 +84,39 @@ void PhysicsSettingsMessenger::SetNewValue(G4UIcommand *command,
       double limit = G4UIcommand::ConvertToDimensionedDouble(
           newValue.substr(pos + 1).c_str());
 
+      RouletteParameters *params = nullptr;
       if (command == fRRgamma.get()) {
-        fSettings.rrGamma.prob = prob;
-        fSettings.rrGamma.limit = limit;
+        params = &fSettings.rrGamma;
       } else if (command == fRRneutron.get()) {
-        fSettings.rrNeutron.prob = prob;
-        fSettings.rrNeutron.limit = limit;
+        params = &fSettings.rrNeutron;
       }
+      params->prob = prob;
+      params->limit = limit;
     }
+  } else if (command == fFTFP_BERTpion.get() ||
+             command == fFTFP_BERTkaon.get() ||
+             command == fFTFP_BERTproton.get() ||
+             command == fFTFP_BERTneutron.get()) {
+    std::istringstream ss(newValue);
+    double minFTFP, maxBERT;
+    G4String unit;
+    ss >> minFTFP >> maxBERT >> unit;
+
+    double unitMult = G4UIcommand::ValueOf(unit);
+    minFTFP *= unitMult;
+    maxBERT *= unitMult;
+
+    FTFP_BERTparameters *params = nullptr;
+    if (command == fFTFP_BERTpion.get()) {
+      params = &fSettings.FTFP_BERTpion;
+    } else if (command == fFTFP_BERTkaon.get()) {
+      params = &fSettings.FTFP_BERTkaon;
+    } else if (command == fFTFP_BERTproton.get()) {
+      params = &fSettings.FTFP_BERTproton;
+    } else if (command == fFTFP_BERTneutron.get()) {
+      params = &fSettings.FTFP_BERTneutron;
+    }
+    params->minFTFP = minFTFP;
+    params->maxBERT = maxBERT;
   }
 }

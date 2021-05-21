@@ -3,13 +3,15 @@
 #ifndef PHYSICS_LIST_HH
 #define PHYSICS_LIST_HH
 
-#include <FTFP_BERT.hh>
+#include <G4VModularPhysicsList.hh>
 
-class PhysicsList final : public FTFP_BERT {
-  using Base = FTFP_BERT;
+class PhysicsSettings;
+
+class PhysicsList final : public G4VModularPhysicsList {
+  using Base = G4VModularPhysicsList;
 
 public:
-  PhysicsList() : Base(/*verbose=*/0) {}
+  PhysicsList(const PhysicsSettings &physicsSettings);
 
   void ConstructProcess() override;
 };

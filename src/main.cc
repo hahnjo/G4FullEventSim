@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
   const PhysicsSettings &physicsSettings = psMessenger->GetPhysicsSettings();
 
   runManager->SetUserInitialization(new DetectorConstruction);
-  runManager->SetUserInitialization(new PhysicsList);
+  runManager->SetUserInitialization(new PhysicsList(physicsSettings));
   runManager->SetUserInitialization(new ActionInitialization(physicsSettings));
 
   G4UImanager *UImanager = G4UImanager::GetUIpointer();
