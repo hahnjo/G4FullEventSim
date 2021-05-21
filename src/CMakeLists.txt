@@ -7,14 +7,16 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_executable(g4FullEventSim
   main.cc
   ActionInitialization.cc
-  Actions.cc
   DetectorConstruction.cc
   EMshowerProcess.cc
+  EventAction.cc
   PhysicsList.cc
   PhysicsSettings.cc
   PrimaryGeneratorAction.cc
+  RunAction.cc
   StackingAction.cc
   SteppingAction.cc
+  TrackingAction.cc
 )
 target_compile_options(g4FullEventSim PRIVATE -Wall -Wextra -Wsuggest-override)
 target_link_libraries(g4FullEventSim ${Geant4_LIBRARIES})

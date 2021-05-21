@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
-#include "Actions.hh"
+#include "RunAction.hh"
 
-#include <G4Electron.hh>
-#include <G4Gamma.hh>
-#include <G4Neutron.hh>
-#include <G4Positron.hh>
-#include <G4RunManager.hh>
-#include <G4Track.hh>
+#include "ParticleStatistics.hh"
+#include "Run.hh"
+
+G4Run *RunAction::GenerateRun() { return new Run; }
 
 void MasterRunAction::BeginOfRunAction(const G4Run *) { fTimer.Start(); }
 
@@ -44,38 +42,4 @@ void MasterRunAction::EndOfRunAction(const G4Run *aRun) {
   G4cout << "    gammas:    " << numGammas << G4endl;
   G4cout << "    neutrons:  " << numNeutrons << G4endl;
   G4cout << "    others:    " << numOthers << G4endl;
-}
-
-void EventAction::BeginOfEventAction(const G4Event *) { fStatistics.Clear(); }
-
-void EventAction::EndOfEventAction(const G4Event *) {
-  auto *runManager = G4RunManager::GetRunManager();
-  Run *run = static_cast<Run *>(runManager->GetNonConstCurrentRun());
-  run->AddStatistics(fStatistics);
-}
-
-void EventAction::AccountTrack(const G4Track *track) {
-  if (track->GetParentID() == 0) {
-    fStatistics.numPrimaries++;
-  } else {
-    fStatistics.numSecondaries++;
-  }
-
-  const G4ParticleDefinition *particleDef = track->GetDefinition();
-  if (particleDef == G4Electron::Definition()) {
-    fStatistics.numElectrons++;
-  } else if (particleDef == G4Positron::Definition()) {
-    fStatistics.numPositrons++;
-  } else if (particleDef == G4Gamma::Definition()) {
-    fStatistics.numGammas++;
-  } else if (particleDef == G4Neutron::Definition()) {
-    fStatistics.numNeutrons++;
-  } else {
-    fStatistics.numOthers++;
-  }
-}
-
-void TrackingAction::PreUserTrackingAction(const G4Track *track) {
-  fTrack = track;
-  fEventAction->AccountTrack(track);
 }

@@ -2,8 +2,8 @@
 
 #include "StackingAction.hh"
 
-#include "Actions.hh"
 #include "PhysicsSettings.hh"
+#include "TrackingAction.hh"
 
 #include <G4Electron.hh>
 #include <G4Gamma.hh>

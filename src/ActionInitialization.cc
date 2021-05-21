@@ -2,10 +2,12 @@
 
 #include "ActionInitialization.hh"
 
-#include "Actions.hh"
+#include "EventAction.hh"
 #include "PrimaryGeneratorAction.hh"
+#include "RunAction.hh"
 #include "StackingAction.hh"
 #include "SteppingAction.hh"
+#include "TrackingAction.hh"
 
 #include <G4RunManager.hh>
 
