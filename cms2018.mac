@@ -27,6 +27,10 @@
 /russianRoulette/neutron 0.1 10 MeV
 
 /run/initialize
+
+/deadRegion QuadRegion
+/deadRegion InterimRegion
+
 /gps/particle e-
 /gps/energy 1 GeV
 /gps/ang/type iso

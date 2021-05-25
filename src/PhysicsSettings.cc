@@ -2,7 +2,10 @@
 
 #include "PhysicsSettings.hh"
 
+#include <G4Region.hh>
+#include <G4RegionStore.hh>
 #include <G4UIcmdWithADoubleAndUnit.hh>
+#include <G4UIcmdWithAString.hh>
 #include <G4UIcommand.hh>
 #include <G4UIdirectory.hh>
 #include <G4UIparameter.hh>
@@ -15,6 +18,9 @@ PhysicsSettingsMessenger::PhysicsSettingsMessenger() {
   fMaxTrackTime->SetGuidance("Set the maximum track time.");
   fMaxTrackTime->SetDefaultUnit("ns");
   fMaxTrackTime->SetUnitCategory("Time");
+
+  fDeadRegion.reset(new G4UIcmdWithAString("/deadRegion", this));
+  fDeadRegion->SetGuidance("Add a dead region, all particles will be killed.");
 
   fRussianRoulette.reset(new G4UIdirectory("/russianRoulette/"));
   fRussianRoulette->SetGuidance("Set parameters for Roussian Roulette.");
@@ -76,6 +82,14 @@ void PhysicsSettingsMessenger::SetNewValue(G4UIcommand *command,
                                            G4String newValue) {
   if (command == fMaxTrackTime.get()) {
     fSettings.maxTrackTime = fMaxTrackTime->GetNewDoubleValue(newValue);
+  } else if (command == fDeadRegion.get()) {
+    const G4Region *region =
+        G4RegionStore::GetInstance()->GetRegion(newValue, /*verbose=*/false);
+    if (region == nullptr) {
+      G4Exception("PhysicsSettingsMessenger::SetNewValue", "0003",
+                  FatalException, "Could not find region!");
+    }
+    fSettings.deadRegions.insert(region);
   } else if (command == fRRgamma.get() || command == fRRneutron.get()) {
     auto pos = newValue.find(" ");
     if (pos != std::string::npos) {

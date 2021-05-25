@@ -27,5 +27,9 @@
 /russianRoulette/neutron 0.1 10 MeV
 
 /run/initialize
+
+/deadRegion QuadRegion
+/deadRegion InterimRegion
+
 /generator/hepMCfile gg2ttbar.dat
 /run/beamOn 1

@@ -6,6 +6,9 @@
 #include <G4SystemOfUnits.hh>
 #include <G4UImessenger.hh>
 
+#include <memory>
+#include <unordered_set>
+
 struct RouletteParameters final {
   double prob = 1.0;
   double limit = 0.0;
@@ -16,8 +19,11 @@ struct FTFP_BERTparameters final {
   double maxBERT = 6.0 * GeV;
 };
 
+class G4Region;
+
 struct PhysicsSettings final {
   double maxTrackTime = -1;
+  std::unordered_set<const G4Region *> deadRegions;
 
   RouletteParameters rrGamma;
   RouletteParameters rrNeutron;
@@ -30,6 +36,7 @@ struct PhysicsSettings final {
 
 class G4UIcommand;
 class G4UIcmdWithADoubleAndUnit;
+class G4UIcmdWithAString;
 class G4UIdirectory;
 
 class PhysicsSettingsMessenger final : public G4UImessenger {
@@ -45,6 +52,7 @@ private:
   PhysicsSettings fSettings;
 
   std::unique_ptr<G4UIcmdWithADoubleAndUnit> fMaxTrackTime;
+  std::unique_ptr<G4UIcmdWithAString> fDeadRegion;
   std::unique_ptr<G4UIdirectory> fRussianRoulette;
   std::unique_ptr<G4UIcommand> fRRgamma;
   std::unique_ptr<G4UIcommand> fRRneutron;
