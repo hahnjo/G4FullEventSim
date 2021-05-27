@@ -12,13 +12,9 @@
 #include <G4HadronPhysicsFTFP_BERT.hh>
 #include <G4IonPhysics.hh>
 #include <G4NeutronTrackingCut.hh>
+#include <G4ProcessManager.hh>
 #include <G4StoppingPhysics.hh>
 #include <G4SystemOfUnits.hh>
-
-#include <G4Electron.hh>
-#include <G4Gamma.hh>
-#include <G4Positron.hh>
-#include <G4ProcessManager.hh>
 
 class HadronPhysicsFTFP_BERT final : public G4HadronPhysicsFTFP_BERT {
 public:
@@ -79,7 +75,11 @@ void PhysicsList::ConstructProcess() {
   Base::ConstructProcess();
 
   auto *process = new EMshowerProcess;
-  G4Electron::Definition()->GetProcessManager()->AddDiscreteProcess(process);
-  G4Positron::Definition()->GetProcessManager()->AddDiscreteProcess(process);
-  G4Gamma::Definition()->GetProcessManager()->AddDiscreteProcess(process);
+  // Register process for all particles, so it properly receives EndTracking().
+  auto aParticleIterator = GetParticleIterator();
+  aParticleIterator->reset();
+  while ((*aParticleIterator)()) {
+    G4ParticleDefinition *particle = aParticleIterator->value();
+    particle->GetProcessManager()->AddDiscreteProcess(process);
+  }
 }

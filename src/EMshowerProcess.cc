@@ -4,11 +4,15 @@
 
 #include "config.hh"
 
+#include <G4Electron.hh>
 #include <G4EventManager.hh>
+#include <G4Gamma.hh>
 #include <G4LogicalVolume.hh>
+#include <G4Positron.hh>
 #include <G4Region.hh>
 #include <G4RegionStore.hh>
 #include <G4StackManager.hh>
+#include <G4TrackingManager.hh>
 #include <G4UIcmdWithABool.hh>
 #include <G4UIcmdWithADoubleAndUnit.hh>
 #include <G4UIcmdWithAString.hh>
@@ -109,6 +113,17 @@ G4double EMshowerProcess::PostStepGetPhysicalInteractionLength(
 
 G4double EMshowerProcess::GetMeanFreePath(const G4Track &track, G4double,
                                           G4ForceCondition *condition) {
+  *condition = InActivated;
+
+  // This process can be registered for all particles, so EndTracking is called
+  // for every track and can dump the particles.
+  const G4ParticleDefinition *particleDef = track.GetParticleDefinition();
+  if (particleDef != G4Electron::Definition() &&
+      particleDef != G4Positron::Definition() &&
+      particleDef != G4Gamma::Definition()) {
+    return DBL_MAX;
+  }
+
   if (fStopParticles && track.GetKineticEnergy() > fEnergyThreshold) {
     const G4LogicalVolume *volume = track.GetVolume()->GetLogicalVolume();
     const G4Region *currentRegion = volume->GetRegion();
@@ -117,7 +132,6 @@ G4double EMshowerProcess::GetMeanFreePath(const G4Track &track, G4double,
       return 0;
     }
   }
-  *condition = NotForced;
   return DBL_MAX;
 }
 
@@ -173,10 +187,15 @@ void EMshowerProcess::DumpParticles() const {
 }
 
 void EMshowerProcess::EndTracking() {
-  G4StackManager *stackManager =
-      G4EventManager::GetEventManager()->GetStackManager();
+  auto *eventManager = G4EventManager::GetEventManager();
+  auto *stackManager = eventManager->GetStackManager();
+  auto *trackingManager = eventManager->GetTrackingManager();
+
   // FIXME: This is not correct, there may be particles in the waiting queues.
-  if (stackManager->GetNUrgentTrack() == 0) {
+  int numParticles = stackManager->GetNUrgentTrack() +
+                     trackingManager->GimmeSecondaries()->size();
+
+  if (numParticles == 0) {
     if (!fDumpParticles.empty()) {
       DumpParticles();
     }
