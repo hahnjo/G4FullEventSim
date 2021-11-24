@@ -8,12 +8,8 @@
 class PhysicsSettings;
 
 class PhysicsList final : public G4VModularPhysicsList {
-  using Base = G4VModularPhysicsList;
-
 public:
   PhysicsList(const PhysicsSettings &physicsSettings);
-
-  void ConstructProcess() override;
 };
 
 #endif // PHYSICS_LIST_HH

@@ -2,7 +2,6 @@
 
 #include "PhysicsList.hh"
 
-#include "EMshowerProcess.hh"
 #include "PhysicsSettings.hh"
 
 #include <G4DecayPhysics.hh>
@@ -69,17 +68,4 @@ PhysicsList::PhysicsList(const PhysicsSettings &physicsSettings) {
 
   // Neutron tracking cut
   RegisterPhysics(new G4NeutronTrackingCut(ver));
-}
-
-void PhysicsList::ConstructProcess() {
-  Base::ConstructProcess();
-
-  auto *process = new EMshowerProcess;
-  // Register process for all particles, so it properly receives EndTracking().
-  auto aParticleIterator = GetParticleIterator();
-  aParticleIterator->reset();
-  while ((*aParticleIterator)()) {
-    G4ParticleDefinition *particle = aParticleIterator->value();
-    particle->GetProcessManager()->AddDiscreteProcess(process);
-  }
 }

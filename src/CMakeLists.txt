@@ -8,7 +8,6 @@ add_executable(g4FullEventSim
   main.cc
   ActionInitialization.cc
   DetectorConstruction.cc
-  EMshowerProcess.cc
   EventAction.cc
   PhysicsList.cc
   PhysicsSettings.cc
