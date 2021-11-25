@@ -1,0 +1,24 @@
+name: Build G4FullEventSim
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: sudo apt-get install libxerces-c-dev
+      - name: Install Geant4
+        run: |
+          wget https://github.com/hahnjo/geant4-actions-binaries/releases/download/$GEANT4_VERSION/$GEANT4_VERSION-binaries.tar.gz
+          tar xf $GEANT4_VERSION-binaries.tar.gz -C $HOME
+        env:
+          GEANT4_VERSION: "geant4.10.07.p03"
+      - name: Build G4FullEventSim
+        run: |
+          source ~/Geant4/bin/geant4.sh
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          make -j4
