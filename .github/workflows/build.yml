@@ -4,6 +4,32 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [
+          geant4.10.07.p03,
+        ]
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: sudo apt-get install libhepmc3-dev libxerces-c-dev
+      - name: Install Geant4
+        run: |
+          wget https://github.com/hahnjo/geant4-actions-binaries/releases/download/${{ matrix.version }}/${{ matrix.version }}-binaries.tar.gz
+          tar xf ${{ matrix.version }}-binaries.tar.gz -C $HOME
+      - name: Build G4FullEventSim
+        run: |
+          source ~/Geant4/bin/geant4.sh
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          make -j4
+
+  no-hepmc:
+    runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
