@@ -11,8 +11,11 @@
 #include <G4PrimaryVertex.hh>
 
 #if HAVE_HEPMC3
+#include <G4LogicalVolume.hh>
 #include <G4PhysicalConstants.hh>
 #include <G4SystemOfUnits.hh>
+#include <G4TransportationManager.hh>
+#include <G4VSolid.hh>
 
 #include <HepMC3/FourVector.h>
 #include <HepMC3/GenEvent.h>
@@ -43,28 +46,49 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
     size_t eventIdx = anEvent->GetEventID() % fGeneratorSettings.events.size();
     const HepMC3::GenEvent *event = fGeneratorSettings.events[eventIdx];
 
+    auto *transMgr = G4TransportationManager::GetTransportationManager();
+    auto *worldVol = transMgr->GetNavigatorForTracking()->GetWorldVolume();
+    auto *worldSolid = worldVol->GetLogicalVolume()->GetSolid();
+
     auto momentumUnit = event->momentum_unit();
     auto lengthUnit = event->length_unit();
     for (HepMC3::ConstGenVertexPtr vertex : event->vertices()) {
+      // Check if there are primary particles in this vertex. If so, sum their
+      // energy to give a meaningful error message in case the vertex is outside
+      // the world.
       bool empty = true;
-      // Check if there is a primary particle in this vertex.
+      double totalE = 0;
       for (HepMC3::ConstGenParticlePtr particle : vertex->particles_out()) {
         if (particle->status() == 1) {
           empty = false;
-          break;
+          totalE += toG4momentum(particle->momentum().e(), momentumUnit);
         }
       }
       if (empty) {
         continue;
       }
 
-      // Create the vertex to hold the primary particles.
+      // Locate the vertex to hold the primary particles.
       const HepMC3::FourVector &pos = vertex->position();
       double x = toG4length(pos.x(), lengthUnit);
       double y = toG4length(pos.y(), lengthUnit);
       double z = toG4length(pos.z(), lengthUnit);
       double t = toG4length(pos.t(), lengthUnit) / c_light;
 
+      // Check if the vertex is inside the world.
+      if (worldSolid->Inside({x, y, z}) != kInside) {
+        G4ExceptionDescription msg;
+        msg << "Vertex " << vertex->id() << " of event "
+            << event->event_number() << " at position (" << x << ", " << y
+            << ", " << z << ") is outside the current world volume!\n"
+            << "Not generating the primaries originating from this vertex"
+            << " with a total of " << totalE / MeV << " MeV.";
+        G4Exception("PrimaryGeneratorAction::GeneratePrimaries", "0002",
+                    JustWarning, msg);
+        continue;
+      }
+
+      // Create the vertex and add the primary particles.
       G4PrimaryVertex *g4Vertex = new G4PrimaryVertex(x, y, z, t);
 
       for (HepMC3::ConstGenParticlePtr particle : vertex->particles_out()) {
