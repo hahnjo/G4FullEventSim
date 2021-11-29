@@ -5,16 +5,19 @@
 
 #include <G4VUserActionInitialization.hh>
 
+class GeneratorSettings;
 class PhysicsSettings;
 
 class ActionInitialization final : public G4VUserActionInitialization {
 public:
-  ActionInitialization(const PhysicsSettings &physicsSettings);
+  ActionInitialization(const GeneratorSettings &generatorSettings,
+                       const PhysicsSettings &physicsSettings);
 
   void BuildForMaster() const override;
   void Build() const override;
 
 private:
+  const GeneratorSettings &fGeneratorSettings;
   const PhysicsSettings &fPhysicsSettings;
 };
 

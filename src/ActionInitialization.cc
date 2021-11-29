@@ -12,15 +12,17 @@
 #include <G4RunManager.hh>
 
 ActionInitialization::ActionInitialization(
+    const GeneratorSettings &generatorSettings,
     const PhysicsSettings &physicsSettings)
-    : fPhysicsSettings(physicsSettings) {}
+    : fGeneratorSettings(generatorSettings), fPhysicsSettings(physicsSettings) {
+}
 
 void ActionInitialization::BuildForMaster() const {
   SetUserAction(new MasterRunAction(fPhysicsSettings));
 }
 
 void ActionInitialization::Build() const {
-  SetUserAction(new PrimaryGeneratorAction);
+  SetUserAction(new PrimaryGeneratorAction(fGeneratorSettings));
 
   if (G4RunManager::GetRunManager()->GetRunManagerType() ==
       G4RunManager::sequentialRM) {

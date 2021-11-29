@@ -8,26 +8,17 @@
 
 #include <memory>
 
-class PrimaryGeneratorMessenger;
-
-namespace HepMC3 {
-class GenEvent;
-};
+class GeneratorSettings;
 
 class PrimaryGeneratorAction final : public G4VUserPrimaryGeneratorAction {
-  friend class PrimaryGeneratorMessenger;
-
 public:
-  PrimaryGeneratorAction();
-  ~PrimaryGeneratorAction();
+  PrimaryGeneratorAction(const GeneratorSettings &generatorSettings);
 
   void GeneratePrimaries(G4Event *anEvent) override;
 
 private:
+  const GeneratorSettings &fGeneratorSettings;
   G4GeneralParticleSource fParticleSource;
-  std::unique_ptr<PrimaryGeneratorMessenger> fMessenger;
-
-  HepMC3::GenEvent *fEvent = nullptr;
 };
 
 #endif // PRIMARY_GENERATOR_ACTION_HH

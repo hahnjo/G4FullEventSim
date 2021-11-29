@@ -4,12 +4,11 @@
 
 #include "config.hh"
 
+#include "GeneratorSettings.hh"
+
 #include <G4Event.hh>
 #include <G4PrimaryParticle.hh>
 #include <G4PrimaryVertex.hh>
-#include <G4UIcmdWithAString.hh>
-#include <G4UIdirectory.hh>
-#include <G4UImessenger.hh>
 
 #if HAVE_HEPMC3
 #include <G4PhysicalConstants.hh>
@@ -19,62 +18,12 @@
 #include <HepMC3/GenEvent.h>
 #include <HepMC3/GenParticle.h>
 #include <HepMC3/GenVertex.h>
-#include <HepMC3/ReaderAscii.h>
 #include <HepMC3/Units.h>
 #endif
 
-#include <memory>
-
-class PrimaryGeneratorMessenger final : public G4UImessenger {
-public:
-  PrimaryGeneratorMessenger(PrimaryGeneratorAction *generatorAction);
-
-  void SetNewValue(G4UIcommand *command, G4String newValue) override;
-
-private:
-  PrimaryGeneratorAction *fGeneratorAction;
-
-  std::unique_ptr<G4UIdirectory> fDirectory;
-  std::unique_ptr<G4UIcmdWithAString> fHepMCfile;
-};
-
-PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(
-    PrimaryGeneratorAction *generatorAction)
-    : fGeneratorAction(generatorAction) {
-  fDirectory.reset(new G4UIdirectory("/generator/"));
-  fDirectory->SetGuidance("Set generator parameters.");
-
-#if HAVE_HEPMC3
-  fHepMCfile.reset(new G4UIcmdWithAString("/generator/hepMCfile", this));
-  fHepMCfile->SetGuidance("Read event from HepMC3 file.");
-#endif
-}
-
-void PrimaryGeneratorMessenger::SetNewValue(G4UIcommand *command,
-                                            G4String newValue) {
-#if HAVE_HEPMC3
-  if (command == fHepMCfile.get()) {
-    // Read one event.
-    HepMC3::ReaderAscii reader(newValue);
-    std::unique_ptr<HepMC3::GenEvent> event(new HepMC3::GenEvent);
-    if (!reader.read_event(*event)) {
-      G4Exception("PrimaryGeneratorMessenger::SetNewValue", "0001",
-                  FatalException, "Could not load HepMC3 file!");
-    }
-    fGeneratorAction->fEvent = event.release();
-  }
-#endif
-}
-
-PrimaryGeneratorAction::PrimaryGeneratorAction() {
-  fMessenger.reset(new PrimaryGeneratorMessenger(this));
-}
-
-PrimaryGeneratorAction::~PrimaryGeneratorAction() {
-#if HAVE_HEPMC3
-  delete fEvent;
-#endif
-}
+PrimaryGeneratorAction::PrimaryGeneratorAction(
+    const GeneratorSettings &generatorSettings)
+    : fGeneratorSettings(generatorSettings) {}
 
 #if HAVE_HEPMC3
 static double toG4length(double l, HepMC3::Units::LengthUnit u) {
@@ -90,13 +39,16 @@ static double toG4momentum(double p, HepMC3::Units::MomentumUnit u) {
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
 #if HAVE_HEPMC3
-  if (fEvent != nullptr) {
-    auto momentumUnit = fEvent->momentum_unit();
-    auto lengthUnit = fEvent->length_unit();
-    for (HepMC3::GenVertexPtr vertex : fEvent->vertices()) {
+  if (!fGeneratorSettings.events.empty()) {
+    size_t eventIdx = anEvent->GetEventID() % fGeneratorSettings.events.size();
+    const HepMC3::GenEvent *event = fGeneratorSettings.events[eventIdx];
+
+    auto momentumUnit = event->momentum_unit();
+    auto lengthUnit = event->length_unit();
+    for (HepMC3::ConstGenVertexPtr vertex : event->vertices()) {
       bool empty = true;
       // Check if there is a primary particle in this vertex.
-      for (HepMC3::GenParticlePtr particle : vertex->particles_out()) {
+      for (HepMC3::ConstGenParticlePtr particle : vertex->particles_out()) {
         if (particle->status() == 1) {
           empty = false;
           break;
@@ -115,7 +67,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
 
       G4PrimaryVertex *g4Vertex = new G4PrimaryVertex(x, y, z, t);
 
-      for (HepMC3::GenParticlePtr particle : vertex->particles_out()) {
+      for (HepMC3::ConstGenParticlePtr particle : vertex->particles_out()) {
         if (particle->status() != 1) {
           continue;
         }
