@@ -7,21 +7,30 @@
 #include <iostream>
 
 int main(int argc, char *argv[]) {
-  if (argc != 3) {
-    std::cerr << "Usage: ./generate <pythia8.cmnd> <out.dat>" << std::endl;
+  if (argc < 3) {
+    std::cerr << "Usage: ./generate <pythia8.cmnd> <out.dat> [ <num_events> ]"
+              << std::endl;
     return 1;
   }
 
   Pythia8::Pythia pythia;
   pythia.readFile(argv[1]);
   pythia.init();
-  pythia.next();
 
   HepMC3::Pythia8ToHepMC3 toHepMC;
-  HepMC3::GenEvent event;
-  toHepMC.fill_next_event(pythia, &event);
   HepMC3::WriterAscii asciiWriter(argv[2]);
-  asciiWriter.write_event(event);
+
+  int num_events = 1;
+  if (argc >= 4) {
+    num_events = atoi(argv[3]);
+  }
+
+  for (int i = 0; i < num_events; i++) {
+    pythia.next();
+    HepMC3::GenEvent event;
+    toHepMC.fill_next_event(pythia, &event);
+    asciiWriter.write_event(event);
+  }
 
   return 0;
 }
