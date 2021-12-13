@@ -5,7 +5,7 @@ A playground application to simulate a full HepMC3 event and study the generated
 ## Build Requirements
 
  * CMake >= 3.8
- * Geant4 10.7 patch-01 with `GEANT4_USE_GDML=ON` (older versions might work)
+ * Geant4 10.7 or 11.0 with `GEANT4_USE_GDML=ON`
  * HepMC3 (optional, but highly recommended; used to load events)
  * Pythia8 (optional, for generating new events; some events are stored in the repository)
 
