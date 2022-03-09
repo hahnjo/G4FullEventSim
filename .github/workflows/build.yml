@@ -8,7 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         version: [
-          geant4-v11.0.0,
+          geant4-v11.0.1,
           geant4.10.07.p03,
         ]
 
