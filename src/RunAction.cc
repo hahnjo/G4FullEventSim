@@ -56,14 +56,14 @@ void MasterRunAction::EndOfRunAction(const G4Run *aRun) {
   G4cout << G4endl;
 
   const Run *run = static_cast<const Run *>(aRun);
-  const ParticleStatistics &stats = run->GetStatistics();
-  double numPrimaries = ((double)stats.numPrimaries) / events;
-  double numSecondaries = ((double)stats.numSecondaries) / events;
-  double numElectrons = ((double)stats.numElectrons) / events;
-  double numPositrons = ((double)stats.numPositrons) / events;
-  double numGammas = ((double)stats.numGammas) / events;
-  double numNeutrons = ((double)stats.numNeutrons) / events;
-  double numOthers = ((double)stats.numOthers) / events;
+  const ParticleStatistics &particleStats = run->GetParticleStatistics();
+  double numPrimaries = ((double)particleStats.numPrimaries) / events;
+  double numSecondaries = ((double)particleStats.numSecondaries) / events;
+  double numElectrons = ((double)particleStats.numElectrons) / events;
+  double numPositrons = ((double)particleStats.numPositrons) / events;
+  double numGammas = ((double)particleStats.numGammas) / events;
+  double numNeutrons = ((double)particleStats.numNeutrons) / events;
+  double numOthers = ((double)particleStats.numOthers) / events;
 
   G4cout << "Average number of particles per event:" << G4endl;
   G4cout << std::defaultfloat;

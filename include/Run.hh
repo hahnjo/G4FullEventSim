@@ -9,16 +9,20 @@
 
 class Run final : public G4Run {
 public:
-  const ParticleStatistics &GetStatistics() const { return fStatistics; }
+  const ParticleStatistics &GetParticleStatistics() const {
+    return fParticleStats;
+  }
 
   void Merge(const G4Run *aRun) override {
     G4Run::Merge(aRun);
-    AddStatistics(static_cast<const Run *>(aRun)->fStatistics);
+    AddStatistics(static_cast<const Run *>(aRun)->fParticleStats);
   }
-  void AddStatistics(const ParticleStatistics &stats) { fStatistics += stats; }
+  void AddStatistics(const ParticleStatistics &particleStats) {
+    fParticleStats += particleStats;
+  }
 
 private:
-  ParticleStatistics fStatistics;
+  ParticleStatistics fParticleStats;
 };
 
 #endif // RUN_HH

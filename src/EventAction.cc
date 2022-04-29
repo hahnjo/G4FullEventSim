@@ -12,31 +12,33 @@
 #include <G4RunManager.hh>
 #include <G4Track.hh>
 
-void EventAction::BeginOfEventAction(const G4Event *) { fStatistics.Clear(); }
+void EventAction::BeginOfEventAction(const G4Event *) {
+  fParticleStats.Clear();
+}
 
 void EventAction::EndOfEventAction(const G4Event *) {
   auto *runManager = G4RunManager::GetRunManager();
   Run *run = static_cast<Run *>(runManager->GetNonConstCurrentRun());
-  run->AddStatistics(fStatistics);
+  run->AddStatistics(fParticleStats);
 }
 
 void EventAction::AccountTrack(const G4Track *track) {
   if (track->GetParentID() == 0) {
-    fStatistics.numPrimaries++;
+    fParticleStats.numPrimaries++;
   } else {
-    fStatistics.numSecondaries++;
+    fParticleStats.numSecondaries++;
   }
 
   const G4ParticleDefinition *particleDef = track->GetDefinition();
   if (particleDef == G4Electron::Definition()) {
-    fStatistics.numElectrons++;
+    fParticleStats.numElectrons++;
   } else if (particleDef == G4Positron::Definition()) {
-    fStatistics.numPositrons++;
+    fParticleStats.numPositrons++;
   } else if (particleDef == G4Gamma::Definition()) {
-    fStatistics.numGammas++;
+    fParticleStats.numGammas++;
   } else if (particleDef == G4Neutron::Definition()) {
-    fStatistics.numNeutrons++;
+    fParticleStats.numNeutrons++;
   } else {
-    fStatistics.numOthers++;
+    fParticleStats.numOthers++;
   }
 }

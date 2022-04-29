@@ -17,7 +17,7 @@ public:
   void AccountTrack(const G4Track *track);
 
 private:
-  ParticleStatistics fStatistics;
+  ParticleStatistics fParticleStats;
 };
 
 #endif // EVENT_ACTION_HH
