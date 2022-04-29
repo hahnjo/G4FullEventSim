@@ -9,14 +9,14 @@ class EventAction;
 
 class TrackingAction final : public G4UserTrackingAction {
 public:
-  TrackingAction(EventAction *eventAction);
+  TrackingAction(EventAction &eventAction);
 
   void PreUserTrackingAction(const G4Track *track) override;
 
   const G4Track *GetTrack() const { return fTrack; }
 
 private:
-  EventAction *fEventAction;
+  EventAction &fEventAction;
 
   const G4Track *fTrack;
 };

@@ -4,10 +4,10 @@
 
 #include "EventAction.hh"
 
-TrackingAction::TrackingAction(EventAction *eventAction)
+TrackingAction::TrackingAction(EventAction &eventAction)
     : fEventAction(eventAction) {}
 
 void TrackingAction::PreUserTrackingAction(const G4Track *track) {
   fTrack = track;
-  fEventAction->AccountTrack(track);
+  fEventAction.AccountTrack(track);
 }
