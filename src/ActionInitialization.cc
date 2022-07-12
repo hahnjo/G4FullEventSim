@@ -18,7 +18,7 @@ ActionInitialization::ActionInitialization(
 }
 
 void ActionInitialization::BuildForMaster() const {
-  SetUserAction(new MasterRunAction(fPhysicsSettings));
+  SetUserAction(new MasterRunAction(fGeneratorSettings, fPhysicsSettings));
 }
 
 void ActionInitialization::Build() const {
@@ -26,7 +26,7 @@ void ActionInitialization::Build() const {
 
   if (G4RunManager::GetRunManager()->GetRunManagerType() ==
       G4RunManager::sequentialRM) {
-    SetUserAction(new MasterRunAction(fPhysicsSettings));
+    SetUserAction(new MasterRunAction(fGeneratorSettings, fPhysicsSettings));
   } else {
     SetUserAction(new RunAction);
   }

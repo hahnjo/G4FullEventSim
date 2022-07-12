@@ -4,7 +4,9 @@
 
 #include "config.hh"
 
+#include <G4UIcmdWithADoubleAndUnit.hh>
 #include <G4UIcmdWithAString.hh>
+#include <G4UIcommand.hh>
 #include <G4UIdirectory.hh>
 
 #if HAVE_HEPMC3
@@ -20,6 +22,16 @@ GeneratorSettingsMessenger::GeneratorSettingsMessenger() {
   fHepMCfile.reset(new G4UIcmdWithAString("/generator/hepMCfile", this));
   fHepMCfile->SetGuidance("Read event from HepMC3 file.");
 #endif
+
+  fEtaCut.reset(new G4UIcommand("/generator/etaCut", this));
+  fEtaCut->SetGuidance("Set eta cut of primary vertices.");
+  fEtaCut->SetParameter(new G4UIparameter("minEta", 'd', false));
+  fEtaCut->SetParameter(new G4UIparameter("maxEta", 'd', false));
+
+  fEnergyCut.reset(new G4UIcmdWithADoubleAndUnit("/generator/energyCut", this));
+  fEnergyCut->SetGuidance("Set minimum energy of primary particles.");
+  fEnergyCut->SetDefaultUnit("MeV");
+  fEnergyCut->SetUnitCategory("Energy");
 }
 
 GeneratorSettingsMessenger::~GeneratorSettingsMessenger() {
@@ -56,9 +68,17 @@ void GeneratorSettingsMessenger::SetNewValue(G4UIcommand *command,
     G4cout << "Read " << fSettings.events.size() << " events from " << newValue
            << G4endl << G4endl;
   }
-#else
-  // Avoid compiler warnings.
-  (void)command;
-  (void)newValue;
 #endif
+
+  if (command == fEtaCut.get()) {
+    auto pos = newValue.find(" ");
+    if (pos != std::string::npos) {
+      fSettings.minEta =
+          G4UIcommand::ConvertToDouble(newValue.substr(0, pos).c_str());
+      fSettings.maxEta =
+          G4UIcommand::ConvertToDouble(newValue.substr(pos + 1).c_str());
+    }
+  } else if (command == fEnergyCut.get()) {
+    fSettings.minEnergy = fEnergyCut->GetNewDoubleValue(newValue);
+  }
 }

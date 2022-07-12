@@ -14,8 +14,12 @@ class GenEvent;
 
 struct GeneratorSettings final {
   std::vector<const HepMC3::GenEvent *> events;
+  double minEta = -DBL_MAX, maxEta = DBL_MAX;
+  double minEnergy = 0;
 };
 
+class G4UIcommand;
+class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWithAString;
 class G4UIdirectory;
 
@@ -33,6 +37,8 @@ private:
 
   std::unique_ptr<G4UIdirectory> fDirectory;
   std::unique_ptr<G4UIcmdWithAString> fHepMCfile;
+  std::unique_ptr<G4UIcommand> fEtaCut;
+  std::unique_ptr<G4UIcmdWithADoubleAndUnit> fEnergyCut;
 };
 
 #endif // GENERATOR_SETTINGS_HH

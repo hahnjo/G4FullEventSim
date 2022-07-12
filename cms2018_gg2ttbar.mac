@@ -32,4 +32,6 @@
 /deadRegion InterimRegion
 
 /generator/hepMCfile gg2ttbar.dat
+/generator/etaCut -5.5 5.5
+/generator/energyCut 40 MeV
 /run/beamOn 1

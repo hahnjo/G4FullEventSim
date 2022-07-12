@@ -60,8 +60,14 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
       double totalE = 0;
       for (HepMC3::ConstGenParticlePtr particle : vertex->particles_out()) {
         if (particle->status() == 1) {
+          // Check the particle's energy.
+          double e = toG4momentum(particle->momentum().e(), momentumUnit);
+          if (e < fGeneratorSettings.minEnergy) {
+            continue;
+          }
+
           empty = false;
-          totalE += toG4momentum(particle->momentum().e(), momentumUnit);
+          totalE += e;
         }
       }
       if (empty) {
@@ -76,7 +82,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
       double t = toG4length(pos.t(), lengthUnit) / c_light;
 
       // Check if the vertex is inside the world.
-      if (worldSolid->Inside({x, y, z}) != kInside) {
+      G4ThreeVector g4Pos{x, y, z};
+      if (worldSolid->Inside(g4Pos) != kInside) {
         G4ExceptionDescription msg;
         msg << "Vertex " << vertex->id() << " of event "
             << event->event_number() << " at position (" << x << ", " << y
@@ -85,6 +92,12 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
             << " with a total of " << totalE / MeV << " MeV.";
         G4Exception("PrimaryGeneratorAction::GeneratePrimaries", "0002",
                     JustWarning, msg);
+        continue;
+      }
+
+      // Check if the vertex is cut out.
+      double eta = g4Pos.eta();
+      if (eta < fGeneratorSettings.minEta || eta > fGeneratorSettings.maxEta) {
         continue;
       }
 
@@ -103,6 +116,11 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
         double py = toG4momentum(mom.py(), momentumUnit);
         double pz = toG4momentum(mom.pz(), momentumUnit);
         double e = toG4momentum(mom.e(), momentumUnit);
+
+        // Check if the particle has enough energy.
+        if (e < fGeneratorSettings.minEnergy) {
+          continue;
+        }
 
         G4PrimaryParticle *g4Particle =
             new G4PrimaryParticle(pid, px, py, pz, e);

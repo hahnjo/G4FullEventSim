@@ -2,6 +2,7 @@
 
 #include "RunAction.hh"
 
+#include "GeneratorSettings.hh"
 #include "ParticleStatistics.hh"
 #include "PhysicsSettings.hh"
 #include "Run.hh"
@@ -10,11 +11,33 @@
 
 G4Run *RunAction::GenerateRun() { return new Run; }
 
-MasterRunAction::MasterRunAction(const PhysicsSettings &physicsSettings)
-    : fPhysicsSettings(physicsSettings) {}
+MasterRunAction::MasterRunAction(const GeneratorSettings &generatorSettings,
+                                 const PhysicsSettings &physicsSettings)
+    : fGeneratorSettings(generatorSettings), fPhysicsSettings(physicsSettings) {
+}
 
 void MasterRunAction::BeginOfRunAction(const G4Run *) {
   G4cout << "Starting run; parameters:" << G4endl;
+
+  G4cout << "  generator cuts:" << G4endl;
+  G4cout << "    eta   : ";
+  double minEta = fGeneratorSettings.minEta;
+  double maxEta = fGeneratorSettings.maxEta;
+  if (minEta > -DBL_MAX || maxEta < DBL_MAX) {
+    G4cout << "min = " << minEta << ", max = " << maxEta;
+  } else {
+    G4cout << "(disabled)";
+  }
+  G4cout << G4endl;
+
+  G4cout << "    energy: ";
+  double minEnergy = fGeneratorSettings.minEnergy;
+  if (minEnergy > 0) {
+    G4cout << "min = " << minEnergy / MeV << " MeV";
+  } else {
+    G4cout << "(disabled)";
+  }
+  G4cout << G4endl;
 
   G4cout << "  maximum track time: ";
   double maxTrackTime = fPhysicsSettings.maxTrackTime;
