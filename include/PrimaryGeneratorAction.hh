@@ -8,7 +8,7 @@
 
 #include <memory>
 
-class GeneratorSettings;
+struct GeneratorSettings;
 
 class PrimaryGeneratorAction final : public G4VUserPrimaryGeneratorAction {
 public:

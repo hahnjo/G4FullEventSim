@@ -5,8 +5,8 @@
 
 #include <G4VUserActionInitialization.hh>
 
-class GeneratorSettings;
-class PhysicsSettings;
+struct GeneratorSettings;
+struct PhysicsSettings;
 
 class ActionInitialization final : public G4VUserActionInitialization {
 public:

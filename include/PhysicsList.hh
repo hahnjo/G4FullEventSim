@@ -5,7 +5,7 @@
 
 #include <G4VModularPhysicsList.hh>
 
-class PhysicsSettings;
+struct PhysicsSettings;
 
 class PhysicsList final : public G4VModularPhysicsList {
 public:

@@ -5,7 +5,7 @@
 
 #include <G4UserStackingAction.hh>
 
-class PhysicsSettings;
+struct PhysicsSettings;
 class TrackingAction;
 
 class StackingAction final : public G4UserStackingAction {

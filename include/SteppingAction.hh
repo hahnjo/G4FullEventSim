@@ -5,7 +5,7 @@
 
 #include <G4UserSteppingAction.hh>
 
-class PhysicsSettings;
+struct PhysicsSettings;
 
 class SteppingAction final : public G4UserSteppingAction {
 public:

@@ -11,8 +11,8 @@ public:
   G4Run *GenerateRun() override;
 };
 
-class GeneratorSettings;
-class PhysicsSettings;
+struct GeneratorSettings;
+struct PhysicsSettings;
 
 class MasterRunAction final : public RunAction {
 public:
