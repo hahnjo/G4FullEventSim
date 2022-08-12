@@ -42,7 +42,7 @@ class G4UIdirectory;
 class PhysicsSettingsMessenger final : public G4UImessenger {
 public:
   PhysicsSettingsMessenger();
-  ~PhysicsSettingsMessenger();
+  ~PhysicsSettingsMessenger() override;
 
   void SetNewValue(G4UIcommand *command, G4String newValue) override;
 

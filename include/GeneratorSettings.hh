@@ -26,7 +26,7 @@ class G4UIdirectory;
 class GeneratorSettingsMessenger final : public G4UImessenger {
 public:
   GeneratorSettingsMessenger();
-  ~GeneratorSettingsMessenger();
+  ~GeneratorSettingsMessenger() override;
 
   void SetNewValue(G4UIcommand *command, G4String newValue) override;
 
