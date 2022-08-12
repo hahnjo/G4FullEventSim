@@ -52,13 +52,13 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
 
     auto momentumUnit = event->momentum_unit();
     auto lengthUnit = event->length_unit();
-    for (HepMC3::ConstGenVertexPtr vertex : event->vertices()) {
+    for (const auto &vertex : event->vertices()) {
       // Check if there are primary particles in this vertex. If so, sum their
       // energy to give a meaningful error message in case the vertex is outside
       // the world.
       bool empty = true;
       double totalE = 0;
-      for (HepMC3::ConstGenParticlePtr particle : vertex->particles_out()) {
+      for (const auto &particle : vertex->particles_out()) {
         if (particle->status() == 1) {
           // Check the particle's energy.
           double e = toG4momentum(particle->momentum().e(), momentumUnit);
@@ -104,7 +104,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
       // Create the vertex and add the primary particles.
       G4PrimaryVertex *g4Vertex = new G4PrimaryVertex(x, y, z, t);
 
-      for (HepMC3::ConstGenParticlePtr particle : vertex->particles_out()) {
+      for (const auto &particle : vertex->particles_out()) {
         if (particle->status() != 1) {
           continue;
         }

@@ -31,7 +31,7 @@ PhysicsSettingsMessenger::PhysicsSettingsMessenger() {
   fRRneutron.reset(new G4UIcommand("/russianRoulette/neutron", this));
   fRRneutron->SetGuidance("Set roulette parameters for neutrons.");
 
-  for (auto cmd : {fRRgamma.get(), fRRneutron.get()}) {
+  for (auto *cmd : {fRRgamma.get(), fRRneutron.get()}) {
     G4UIparameter *prob = new G4UIparameter("prob", 'd', false);
     prob->SetParameterRange("prob>0. && prob<=1.");
     cmd->SetParameter(prob);
@@ -60,8 +60,8 @@ PhysicsSettingsMessenger::PhysicsSettingsMessenger() {
   fFTFP_BERTneutron.reset(new G4UIcommand("/FTFP_BERT/neutron", this));
   fFTFP_BERTneutron->SetGuidance("Set threshold for neutrons.");
 
-  for (auto cmd : {fFTFP_BERTpion.get(), fFTFP_BERTkaon.get(),
-                   fFTFP_BERTproton.get(), fFTFP_BERTneutron.get()}) {
+  for (auto *cmd : {fFTFP_BERTpion.get(), fFTFP_BERTkaon.get(),
+                    fFTFP_BERTproton.get(), fFTFP_BERTneutron.get()}) {
     G4UIparameter *minFTFP = new G4UIparameter("minFTFP", 'd', false);
     minFTFP->SetParameterRange("minFTFP>0.");
     cmd->SetParameter(minFTFP);
