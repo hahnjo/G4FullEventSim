@@ -10,6 +10,7 @@ add_executable(g4FullEventSim
   DetectorConstruction.cc
   EventAction.cc
   GeneratorSettings.cc
+  OutputSettings.cc
   PhysicsList.cc
   PhysicsSettings.cc
   PrimaryGeneratorAction.cc

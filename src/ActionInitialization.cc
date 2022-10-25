@@ -13,12 +13,14 @@
 
 ActionInitialization::ActionInitialization(
     const GeneratorSettings &generatorSettings,
-    const PhysicsSettings &physicsSettings)
-    : fGeneratorSettings(generatorSettings), fPhysicsSettings(physicsSettings) {
-}
+    const PhysicsSettings &physicsSettings,
+    const OutputSettings &outputSettings)
+    : fGeneratorSettings(generatorSettings), fPhysicsSettings(physicsSettings),
+      fOutputSettings(outputSettings) {}
 
 void ActionInitialization::BuildForMaster() const {
-  SetUserAction(new MasterRunAction(fGeneratorSettings, fPhysicsSettings));
+  SetUserAction(new MasterRunAction(fGeneratorSettings, fPhysicsSettings,
+                                    fOutputSettings));
 }
 
 void ActionInitialization::Build() const {
@@ -26,12 +28,13 @@ void ActionInitialization::Build() const {
 
   if (G4RunManager::GetRunManager()->GetRunManagerType() ==
       G4RunManager::sequentialRM) {
-    SetUserAction(new MasterRunAction(fGeneratorSettings, fPhysicsSettings));
+    SetUserAction(new MasterRunAction(fGeneratorSettings, fPhysicsSettings,
+                                      fOutputSettings));
   } else {
     SetUserAction(new RunAction);
   }
 
-  EventAction *eventAction = new EventAction;
+  EventAction *eventAction = new EventAction(fOutputSettings);
   SetUserAction(eventAction);
   TrackingAction *trackingAction = new TrackingAction(*eventAction);
   SetUserAction(trackingAction);

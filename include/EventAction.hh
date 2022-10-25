@@ -7,10 +7,14 @@
 
 #include <G4UserEventAction.hh>
 
+struct OutputSettings;
+
 class G4Track;
 
 class EventAction final : public G4UserEventAction {
 public:
+  EventAction(const OutputSettings &outputSettings);
+
   void BeginOfEventAction(const G4Event *) override;
   void EndOfEventAction(const G4Event *) override;
 
@@ -18,6 +22,7 @@ public:
 
 private:
   ParticleStatistics fParticleStats;
+  const OutputSettings &fOutputSettings;
 };
 
 #endif // EVENT_ACTION_HH

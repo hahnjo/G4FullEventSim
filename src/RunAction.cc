@@ -3,6 +3,7 @@
 #include "RunAction.hh"
 
 #include "GeneratorSettings.hh"
+#include "OutputSettings.hh"
 #include "ParticleStatistics.hh"
 #include "PhysicsSettings.hh"
 #include "Run.hh"
@@ -12,9 +13,10 @@
 G4Run *RunAction::GenerateRun() { return new Run; }
 
 MasterRunAction::MasterRunAction(const GeneratorSettings &generatorSettings,
-                                 const PhysicsSettings &physicsSettings)
-    : fGeneratorSettings(generatorSettings), fPhysicsSettings(physicsSettings) {
-}
+                                 const PhysicsSettings &physicsSettings,
+                                 const OutputSettings &outputSettings)
+    : fGeneratorSettings(generatorSettings), fPhysicsSettings(physicsSettings),
+      fOutputSettings(outputSettings) {}
 
 void MasterRunAction::BeginOfRunAction(const G4Run *) {
   G4cout << "Starting run; parameters:" << G4endl;
@@ -76,27 +78,30 @@ void MasterRunAction::EndOfRunAction(const G4Run *aRun) {
   G4cout << "  Time: " << fTimer << G4endl;
   G4cout << " ============================================================================== " << G4endl;
   // clang-format on
-  G4cout << G4endl;
 
-  const Run *run = static_cast<const Run *>(aRun);
-  const ParticleStatistics &particleStats = run->GetParticleStatistics();
-  double numPrimaries = ((double)particleStats.numPrimaries) / events;
-  double numSecondaries = ((double)particleStats.numSecondaries) / events;
-  double numElectrons = ((double)particleStats.numElectrons) / events;
-  double numPositrons = ((double)particleStats.numPositrons) / events;
-  double numGammas = ((double)particleStats.numGammas) / events;
-  double numNeutrons = ((double)particleStats.numNeutrons) / events;
-  double numOthers = ((double)particleStats.numOthers) / events;
+  if (fOutputSettings.printParticleStats) {
+    G4cout << G4endl;
 
-  G4cout << "Average number of particles per event:" << G4endl;
-  G4cout << std::defaultfloat;
-  G4cout << "  primaries:   " << numPrimaries << G4endl;
-  G4cout << std::scientific;
-  G4cout << "  secondaries: " << numSecondaries << G4endl;
-  G4cout << "  tracked particles:" << G4endl;
-  G4cout << "    electrons: " << numElectrons << G4endl;
-  G4cout << "    positrons: " << numPositrons << G4endl;
-  G4cout << "    gammas:    " << numGammas << G4endl;
-  G4cout << "    neutrons:  " << numNeutrons << G4endl;
-  G4cout << "    others:    " << numOthers << G4endl;
+    const Run *run = static_cast<const Run *>(aRun);
+    const ParticleStatistics &particleStats = run->GetParticleStatistics();
+    double numPrimaries = ((double)particleStats.numPrimaries) / events;
+    double numSecondaries = ((double)particleStats.numSecondaries) / events;
+    double numElectrons = ((double)particleStats.numElectrons) / events;
+    double numPositrons = ((double)particleStats.numPositrons) / events;
+    double numGammas = ((double)particleStats.numGammas) / events;
+    double numNeutrons = ((double)particleStats.numNeutrons) / events;
+    double numOthers = ((double)particleStats.numOthers) / events;
+
+    G4cout << "Average number of particles per event:" << G4endl;
+    G4cout << std::defaultfloat;
+    G4cout << "  primaries:   " << numPrimaries << G4endl;
+    G4cout << std::scientific;
+    G4cout << "  secondaries: " << numSecondaries << G4endl;
+    G4cout << "  tracked particles:" << G4endl;
+    G4cout << "    electrons: " << numElectrons << G4endl;
+    G4cout << "    positrons: " << numPositrons << G4endl;
+    G4cout << "    gammas:    " << numGammas << G4endl;
+    G4cout << "    neutrons:  " << numNeutrons << G4endl;
+    G4cout << "    others:    " << numOthers << G4endl;
+  }
 }

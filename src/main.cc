@@ -3,6 +3,7 @@
 #include "ActionInitialization.hh"
 #include "DetectorConstruction.hh"
 #include "GeneratorSettings.hh"
+#include "OutputSettings.hh"
 #include "PhysicsList.hh"
 #include "PhysicsSettings.hh"
 
@@ -30,10 +31,14 @@ int main(int argc, char *argv[]) {
       new PhysicsSettingsMessenger);
   const PhysicsSettings &physicsSettings = psMessenger->GetPhysicsSettings();
 
+  std::unique_ptr<OutputSettingsMessenger> osMessenger(
+      new OutputSettingsMessenger);
+  const OutputSettings &outputSettings = osMessenger->GetOutputSettings();
+
   runManager->SetUserInitialization(new DetectorConstruction);
   runManager->SetUserInitialization(new PhysicsList(physicsSettings));
-  runManager->SetUserInitialization(
-      new ActionInitialization(generatorSettings, physicsSettings));
+  runManager->SetUserInitialization(new ActionInitialization(
+      generatorSettings, physicsSettings, outputSettings));
 
   G4UImanager *UImanager = G4UImanager::GetUIpointer();
   G4String command = "/control/execute ";
