@@ -12,4 +12,4 @@ A playground application to simulate a full HepMC3 event and study the generated
 ## Usage Guide
 
 The build system compiles `bin/g4FullEventSim`, which expects a Geant4 macro as its first argument.
-An example is given in `cms2018_gg2ttbar.mac`, the file `gg2ttbar.dat` is stored in the `pythia8/` subdirectory.
+An example is given in `cms2021_gg2ttbar.mac`, the file `gg2ttbar.dat` is stored in the `pythia8/` subdirectory.

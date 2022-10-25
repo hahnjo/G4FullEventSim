@@ -2,7 +2,7 @@
 /process/had/verbose 0
 # /tracking/verbose 1
 
-/detector/gdml cms2018.gdml
+/detector/gdml cms2021.gdml
 /detector/field 0 0 3.8 T
 
 # Model settings from FTFPCMS_BERT_EMM
