@@ -7,6 +7,7 @@
 
 struct OutputSettings final {
   bool printParticleStats = true;
+  bool printStepStats = false;
 };
 
 class G4UIcmdWithABool;
@@ -26,6 +27,7 @@ private:
 
   std::unique_ptr<G4UIdirectory> fOutputDir;
   std::unique_ptr<G4UIcmdWithABool> fPrintParticleStats;
+  std::unique_ptr<G4UIcmdWithABool> fPrintStepStats;
 };
 
 #endif

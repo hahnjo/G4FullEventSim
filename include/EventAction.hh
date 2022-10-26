@@ -4,11 +4,13 @@
 #define EVENT_ACTION_HH
 
 #include "ParticleStatistics.hh"
+#include "StepStatistics.hh"
 
 #include <G4UserEventAction.hh>
 
 struct OutputSettings;
 
+class G4Step;
 class G4Track;
 
 class EventAction final : public G4UserEventAction {
@@ -19,9 +21,11 @@ public:
   void EndOfEventAction(const G4Event *) override;
 
   void AccountTrack(const G4Track *track);
+  void AccountStep(const G4Step *step);
 
 private:
   ParticleStatistics fParticleStats;
+  StepStatistics fStepStats;
   const OutputSettings &fOutputSettings;
 };
 

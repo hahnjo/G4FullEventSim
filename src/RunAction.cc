@@ -10,6 +10,9 @@
 
 #include <G4SystemOfUnits.hh>
 
+#include <algorithm>
+#include <vector>
+
 G4Run *RunAction::GenerateRun() { return new Run; }
 
 MasterRunAction::MasterRunAction(const GeneratorSettings &generatorSettings,
@@ -79,10 +82,11 @@ void MasterRunAction::EndOfRunAction(const G4Run *aRun) {
   G4cout << " ============================================================================== " << G4endl;
   // clang-format on
 
+  const Run *run = static_cast<const Run *>(aRun);
+
   if (fOutputSettings.printParticleStats) {
     G4cout << G4endl;
 
-    const Run *run = static_cast<const Run *>(aRun);
     const ParticleStatistics &particleStats = run->GetParticleStatistics();
     double numPrimaries = ((double)particleStats.numPrimaries) / events;
     double numSecondaries = ((double)particleStats.numSecondaries) / events;
@@ -103,5 +107,43 @@ void MasterRunAction::EndOfRunAction(const G4Run *aRun) {
     G4cout << "    gammas:    " << numGammas << G4endl;
     G4cout << "    neutrons:  " << numNeutrons << G4endl;
     G4cout << "    others:    " << numOthers << G4endl;
+  }
+
+  if (fOutputSettings.printStepStats) {
+    G4cout << G4endl;
+
+    auto printStepsByProcess =
+        [&](const StepStatistics::StepsByProcessMap &map) {
+          // Get all entries and sort them in descending order.
+          using K = StepStatistics::StepsByProcessKey;
+          using V = StepStatistics::StepsByProcessValue;
+          using P = std::pair<K, V>;
+          std::vector<P> entries(map.begin(), map.end());
+          std::sort(entries.begin(), entries.end(),
+                    [](const P &a, const P &b) { return a.second > b.second; });
+
+          for (const auto &stepsByProc : entries) {
+            double average = ((double)stepsByProc.second) / events;
+            G4cout << "      " << stepsByProc.first << ": " << average
+                   << G4endl;
+          }
+        };
+
+    const StepStatistics &stepStats = run->GetStepStatistics();
+    double numChargedSteps = ((double)stepStats.numChargedSteps) / events;
+    double numElectronSteps = ((double)stepStats.numElectronSteps) / events;
+    double numPositronSteps = ((double)stepStats.numPositronSteps) / events;
+    double numNeutralSteps = ((double)stepStats.numNeutralSteps) / events;
+    double numGammaSteps = ((double)stepStats.numGammaSteps) / events;
+
+    G4cout << "Average number of steps per event:" << G4endl;
+    G4cout << "  charged: " << numChargedSteps << G4endl;
+    G4cout << "    electrons: " << numElectronSteps << G4endl;
+    printStepsByProcess(stepStats.numElectronStepsByProcess);
+    G4cout << "    positrons: " << numPositronSteps << G4endl;
+    printStepsByProcess(stepStats.numPositronStepsByProcess);
+    G4cout << "  neutral: " << numNeutralSteps << G4endl;
+    G4cout << "    gammas: " << numGammaSteps << G4endl;
+    printStepsByProcess(stepStats.numGammaStepsByProcess);
   }
 }

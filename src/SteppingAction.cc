@@ -2,6 +2,7 @@
 
 #include "SteppingAction.hh"
 
+#include "EventAction.hh"
 #include "PhysicsSettings.hh"
 
 #include <G4LogicalVolume.hh>
@@ -10,10 +11,13 @@
 #include <G4Track.hh>
 #include <G4VPhysicalVolume.hh>
 
-SteppingAction::SteppingAction(const PhysicsSettings &physicsSettings)
-    : fPhysicsSettings(physicsSettings) {}
+SteppingAction::SteppingAction(const PhysicsSettings &physicsSettings,
+                               EventAction &eventAction)
+    : fPhysicsSettings(physicsSettings), fEventAction(eventAction) {}
 
 void SteppingAction::UserSteppingAction(const G4Step *step) {
+  fEventAction.AccountStep(step);
+
   G4Track *track = step->GetTrack();
   if (track->GetTrackStatus() != fAlive) {
     return;

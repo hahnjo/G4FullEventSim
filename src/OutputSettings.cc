@@ -14,6 +14,11 @@ OutputSettingsMessenger::OutputSettingsMessenger() {
   fPrintParticleStats->SetGuidance("Print statistics about tracked particles.");
   fPrintParticleStats->SetDefaultValue(true);
   fPrintParticleStats->GetParameter(0)->SetOmittable(true);
+
+  fPrintStepStats.reset(new G4UIcmdWithABool("/output/printStepStats", this));
+  fPrintStepStats->SetGuidance("Print statistics about number of steps.");
+  fPrintStepStats->SetDefaultValue(true);
+  fPrintStepStats->GetParameter(0)->SetOmittable(true);
 }
 
 OutputSettingsMessenger::~OutputSettingsMessenger() {}
@@ -23,5 +28,7 @@ void OutputSettingsMessenger::SetNewValue(G4UIcommand *command,
   if (command == fPrintParticleStats.get()) {
     fSettings.printParticleStats =
         fPrintParticleStats->GetNewBoolValue(newValue);
+  } else if (command == fPrintStepStats.get()) {
+    fSettings.printStepStats = fPrintStepStats->GetNewBoolValue(newValue);
   }
 }

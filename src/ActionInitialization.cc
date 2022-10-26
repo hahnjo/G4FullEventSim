@@ -38,7 +38,7 @@ void ActionInitialization::Build() const {
   SetUserAction(eventAction);
   TrackingAction *trackingAction = new TrackingAction(*eventAction);
   SetUserAction(trackingAction);
-  SetUserAction(new SteppingAction(fPhysicsSettings));
+  SetUserAction(new SteppingAction(fPhysicsSettings, *eventAction));
 
   SetUserAction(new StackingAction(fPhysicsSettings, *trackingAction));
 }
