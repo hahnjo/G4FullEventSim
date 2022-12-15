@@ -2,6 +2,7 @@
 
 #include "PhysicsSettings.hh"
 
+#include <G4Exception.hh>
 #include <G4Region.hh>
 #include <G4RegionStore.hh>
 #include <G4UIcmdWithADoubleAndUnit.hh>
@@ -86,8 +87,10 @@ void PhysicsSettingsMessenger::SetNewValue(G4UIcommand *command,
     const G4Region *region =
         G4RegionStore::GetInstance()->GetRegion(newValue, /*verbose=*/false);
     if (region == nullptr) {
+      G4ExceptionDescription ed;
+      ed << "Could not find region '" << newValue << "'!";
       G4Exception("PhysicsSettingsMessenger::SetNewValue", "0003",
-                  FatalException, "Could not find region!");
+                  FatalException, ed);
     }
     fSettings.deadRegions.insert(region);
   } else if (command == fRRgamma.get() || command == fRRneutron.get()) {
