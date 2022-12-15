@@ -9,7 +9,9 @@
 
 #include <G4RunManager.hh>
 #include <G4RunManagerFactory.hh>
+#include <G4String.hh>
 #include <G4UImanager.hh>
+#include <G4ios.hh>
 
 #include <memory>
 

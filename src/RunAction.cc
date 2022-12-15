@@ -7,10 +7,14 @@
 #include "ParticleStatistics.hh"
 #include "PhysicsSettings.hh"
 #include "Run.hh"
+#include "StepStatistics.hh"
 
+#include <G4Run.hh>
 #include <G4SystemOfUnits.hh>
+#include <G4ios.hh>
 
 #include <algorithm>
+#include <utility>
 #include <vector>
 
 G4Run *RunAction::GenerateRun() { return new Run; }

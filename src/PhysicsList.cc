@@ -11,9 +11,9 @@
 #include <G4HadronPhysicsFTFP_BERT.hh>
 #include <G4IonPhysics.hh>
 #include <G4NeutronTrackingCut.hh>
-#include <G4ProcessManager.hh>
 #include <G4StoppingPhysics.hh>
 #include <G4SystemOfUnits.hh>
+#include <G4Threading.hh>
 
 class HadronPhysicsFTFP_BERT final : public G4HadronPhysicsFTFP_BERT {
 public:

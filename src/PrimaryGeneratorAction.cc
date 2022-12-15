@@ -4,16 +4,17 @@
 
 #include "config.hh"
 
+#if HAVE_HEPMC3
 #include "GeneratorSettings.hh"
 
 #include <G4Event.hh>
-#include <G4PrimaryParticle.hh>
-#include <G4PrimaryVertex.hh>
-
-#if HAVE_HEPMC3
+#include <G4Exception.hh>
 #include <G4LogicalVolume.hh>
 #include <G4PhysicalConstants.hh>
+#include <G4PrimaryParticle.hh>
+#include <G4PrimaryVertex.hh>
 #include <G4SystemOfUnits.hh>
+#include <G4ThreeVector.hh>
 #include <G4TransportationManager.hh>
 #include <G4VSolid.hh>
 

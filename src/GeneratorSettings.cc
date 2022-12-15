@@ -4,10 +4,15 @@
 
 #include "config.hh"
 
+#include <G4Exception.hh>
 #include <G4UIcmdWithADoubleAndUnit.hh>
 #include <G4UIcmdWithAString.hh>
 #include <G4UIcommand.hh>
 #include <G4UIdirectory.hh>
+#include <G4UIparameter.hh>
+#include <G4ios.hh>
+
+#include <string>
 
 #if HAVE_HEPMC3
 #include <HepMC3/GenEvent.h>

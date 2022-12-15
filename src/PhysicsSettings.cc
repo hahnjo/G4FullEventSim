@@ -3,7 +3,6 @@
 #include "PhysicsSettings.hh"
 
 #include <G4Exception.hh>
-#include <G4Region.hh>
 #include <G4RegionStore.hh>
 #include <G4UIcmdWithADoubleAndUnit.hh>
 #include <G4UIcmdWithAString.hh>

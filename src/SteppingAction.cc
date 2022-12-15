@@ -6,10 +6,11 @@
 #include "PhysicsSettings.hh"
 
 #include <G4LogicalVolume.hh>
-#include <G4Region.hh>
 #include <G4Step.hh>
 #include <G4Track.hh>
 #include <G4VPhysicalVolume.hh>
+
+class G4Region;
 
 SteppingAction::SteppingAction(const PhysicsSettings &physicsSettings,
                                EventAction &eventAction)

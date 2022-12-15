@@ -6,6 +6,7 @@
 #include <G4UserTrackingAction.hh>
 
 class EventAction;
+class G4Track;
 
 class TrackingAction final : public G4UserTrackingAction {
 public:

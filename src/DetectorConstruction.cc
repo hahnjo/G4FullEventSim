@@ -2,6 +2,7 @@
 
 #include "DetectorConstruction.hh"
 
+#include <G4Exception.hh>
 #include <G4FieldManager.hh>
 #include <G4GDMLParser.hh>
 #include <G4SystemOfUnits.hh>
@@ -12,6 +13,7 @@
 #include <G4UIdirectory.hh>
 #include <G4UImessenger.hh>
 #include <G4UniformMagField.hh>
+#include <G4ios.hh>
 
 class DetectorConstructionMessenger final : public G4UImessenger {
 public:

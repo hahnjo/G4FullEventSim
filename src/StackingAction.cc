@@ -12,6 +12,8 @@
 #include <G4Track.hh>
 #include <Randomize.hh>
 
+class G4ParticleDefinition;
+
 StackingAction::StackingAction(const PhysicsSettings &physicsSettings,
                                const TrackingAction &trackingAction)
     : fPhysicsSettings(physicsSettings), fTrackingAction(trackingAction) {}
