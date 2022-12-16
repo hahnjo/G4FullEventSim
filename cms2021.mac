@@ -6,15 +6,17 @@
 /detector/field 0 0 3.8 T
 
 # Model settings from FTFPCMS_BERT_EMM
-#  - CMSEmStandardPhysics(LPM)
+#  - CMSEmStandardPhysics
 /process/em/applyCuts true
+/process/em/lowestElectronEnergy 25 keV
+/process/em/lowestMuHadEnergy 25 keV
 /process/eLoss/StepFunction 0.8 1 mm
 /process/msc/RangeFactor 0.2
 /process/msc/StepLimit Minimal
 # Possibly a different step limit for "HcalRegion" and "HGCalRegion" in
 # CMSEmStandardPhysics, to be checked.
 
-#  - CMSHadronPhysicsFTFP_BERT(106)
+#  - CMSHadronPhysicsFTFP_BERT
 /FTFP_BERT/pion 3 12 GeV
 /FTFP_BERT/kaon 3 6 GeV
 /FTFP_BERT/proton 3 6 GeV
