@@ -1,0 +1,10 @@
+import model sm
+generate g g > t t~ [QCD]
+output gg2ttbar
+launch
+shower=pythia8
+set lpp1 1
+set lpp2 1
+set ebeam1 7000
+set ebeam2 7000
+set nevents 1
